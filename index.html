@@ -13,7 +13,6 @@ body{
     overflow-x:hidden;
     font-family:'Poppins', sans-serif;
     background: linear-gradient(135deg,#ff9a9e,#fad0c4,#ffdde1);
-    overflow:hidden;
     text-align:center;
     color:#5a003c;
 }
@@ -51,6 +50,18 @@ body{
     margin-top:15vh;
 }
 
+/* Inputs */
+input{
+    padding:12px;
+    border-radius:30px;
+    border:none;
+    width:80%;
+    max-width:280px;
+    margin-top:10px;
+    font-size:14px;
+}
+
+/* Buttons */
 button{
     padding:12px 20px;
     border:none;
@@ -88,90 +99,58 @@ button{
     width:90%;
     max-width:400px;
 }
+
+/* WHEEL */
 #wheel{
-    width:320px;
-    height:320px;
-    border-radius:50%;
-    margin:20px auto;
-    border:10px solid #ff4d6d;
-    position:relative;
-    transition:transform 5s ease-out;
-    #wheel{
-    width:320px;
-    height:320px;
+    width:min(90vw,360px);
+    height:min(90vw,360px);
     border-radius:50%;
     margin:20px auto;
     border:8px solid #ff4d6d;
     position:relative;
     transition:transform 5s ease-out;
     background: radial-gradient(circle at center, #fff0f5, #ffd6e0);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    #wheel{
-    width: min(80vw, 320px);
-    height: min(80vw, 320px);
-    border-radius:50%;
+    box-shadow:0 8px 25px rgba(0,0,0,0.08);
+}
+
+/* Labels */
+.label{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform-origin:0 0;
+    font-weight:700;
+    font-size:clamp(12px,3.5vw,16px);
+    color:#5a003c;
+    white-space:nowrap;
+}
+
+/* Proper slice positions */
+.label{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform-origin:center;
+    font-weight:700;
+    font-size:clamp(13px,3.5vw,16px);
+    color:#5a003c;
+    white-space:nowrap;
+}
+
+/* Correct radial positioning */
+.label1{ transform: translate(-50%, -50%) rotate(36deg) translateY(-120px) rotate(-36deg); }
+.label2{ transform: translate(-50%, -50%) rotate(108deg) translateY(-120px) rotate(-108deg); }
+.label3{ transform: translate(-50%, -50%) rotate(180deg) translateY(-120px) rotate(-180deg); }
+.label4{ transform: translate(-50%, -50%) rotate(252deg) translateY(-120px) rotate(-252deg); }
+.label5{ transform: translate(-50%, -50%) rotate(324deg) translateY(-120px) rotate(-324deg); }
+
+#finalMessage{
+    max-width:500px;
     margin:20px auto;
-    border:8px solid #ff4d6d;
-    position:relative;
-    transition:transform 5s ease-out;
-    background: radial-gradient(circle at center, #fff0f5, #ffd6e0);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    line-height:1.8;
+    font-size:clamp(14px,4vw,16px);
 }
 
-}
-
-}
-
-/* Label base */
-.label{
-    position:absolute;
-    left:50%;
-    top:50%;
-    transform-origin:0 0;
-    font-weight:700;
-    font-size: clamp(12px, 3vw, 16px);
-    color:#5a003c;
-    white-space:nowrap;
-
-}
-
-/* Proper slice positioning */
-.label{
-    position:absolute;
-    left:50%;
-    top:50%;
-    transform-origin:0 0;
-    font-weight:700;
-    font-size:16px;
-    color:#5a003c;
-    white-space:nowrap;
-}
-
-/* Each label positioned at correct mid-angle */
-.label1{
-    transform: rotate(30deg) translate(0,-70px) rotate(-20deg);
-}
-
-.label2{
-    transform: rotate(108deg) translate(0,-70px) rotate(-20deg);
-}
-
-.label3{
-    transform: rotate(180deg) translate(0,-70px) rotate(-20deg);
-}
-
-.label4{
-    transform: rotate(252deg) translate(0,-70px) rotate(-20deg);
-}
-
-.label5{
-    transform: rotate(324deg) translate(0,-70px) rotate(-20deg);
-}
-
-
-@media(max-width:600px){
-    #wheel{width:260px;height:260px;}
-}
 </style>
 </head>
 <body>
@@ -180,20 +159,21 @@ button{
   <source src="./music.mp3" type="audio/mpeg">
 </audio>
 
-
 <div id="splash">
 <h1>Happy Valentine 💖</h1>
 </div>
 
 <div class="section" id="intro">
-<h2>I just want you to know that you are deeply loved.</h2>
-<p>And today… I just want to ask you something special.</p>
-<button class="primary" onclick="openValentineModal()">Continue 💕</button>
+<h2>You are deeply loved.</h2>
+<p>Before we continue… tell me your beautiful name.</p>
+<input type="text" id="girlName" placeholder="Enter your name here">
+<br>
+<button class="primary" onclick="saveName()">Continue 💕</button>
 </div>
 
 <div class="modal" id="valentineModal">
 <div class="modal-content">
-<h2>Will You Be My Valentine? 💖</h2>
+<h2 id="valQuestion">Will You Be My Valentine? 💖</h2>
 <button class="primary" onclick="goToWheel()">Yes 💕</button>
 <button class="secondary" id="noBtn">No 😅</button>
 </div>
@@ -201,7 +181,6 @@ button{
 
 <div class="section" id="wheelPage">
 <h2>Spin The Love Wheel 🎁</h2>
-<div class="pointer">⬇</div>
 <div id="wheel">
   <div class="label label1">💋 Kiss</div>
   <div class="label label2">🤗 Hug</div>
@@ -209,7 +188,6 @@ button{
   <div class="label label4">🍦 Ice Cream</div>
   <div class="label label5">🌹 Flowers</div>
 </div>
-
 <button class="primary" onclick="spinWheel()">Spin 💫</button>
 </div>
 
@@ -223,65 +201,86 @@ button{
 
 <div class="section" id="finalPage">
 <h1>🎁 💖</h1>
-<p>
-Today is about love, but not just the loud kind.
-It is about the quiet love. The love that checks in.
-The love that stays. The love that forgives. The love that grows.
-I am grateful for every soul in my life. If you are reading this, I am thankful for you.
-</p>
+<p id="finalMessage"></p>
 </div>
-
 
 <script>
 
-/* MUSIC START ON FIRST CLICK */
-const music = document.getElementById("bgMusic");
-
-document.body.addEventListener("click", function () {
-    music.play().catch(e => console.log(e));
-}, { once: true });
+/* MUSIC ON FIRST CLICK */
+const music=document.getElementById("bgMusic");
+document.addEventListener("click",()=>{
+  music.play().catch(()=>{});
+},{once:true});
 
 /* After splash */
 setTimeout(()=>{
-document.getElementById("intro").style.display="block";
+  document.getElementById("intro").style.display="block";
 },6000);
 
-/* Valentine modal */
-function openValentineModal(){
-document.getElementById("valentineModal").style.display="flex";
+let savedName="";
+
+/* Save name */
+function saveName(){
+  const input=document.getElementById("girlName").value.trim();
+  if(input==="") return;
+  savedName=input;
+  document.getElementById("intro").style.display="none";
+  document.getElementById("valQuestion").innerText=
+  "Will You Be My Valentine, "+savedName+"? 💖";
+  document.getElementById("valentineModal").style.display="flex";
 }
 
-/* Moving No button */
+/* Moving No */
 document.getElementById("noBtn").addEventListener("mouseover",function(){
-this.style.position="absolute";
-this.style.left=Math.random()*60+"vw";
-this.style.top=Math.random()*60+"vh";
+  this.style.position="absolute";
+  this.style.left=Math.random()*60+"vw";
+  this.style.top=Math.random()*60+"vh";
 });
 
 /* Go to wheel */
 function goToWheel(){
-document.getElementById("valentineModal").style.display="none";
-document.getElementById("intro").style.display="none";
-document.getElementById("wheelPage").style.display="block";
+  document.getElementById("valentineModal").style.display="none";
+  document.getElementById("wheelPage").style.display="block";
 }
 
 /* Spin rigged */
 function spinWheel(){
-const wheel=document.getElementById("wheel");
-const prizes=["Free Kiss 💋","Free Hug 🤗"];
-const chosen=prizes[Math.floor(Math.random()*2)];
-wheel.style.transform="rotate(3600deg)";
+  const wheel=document.getElementById("wheel");
+  const prizes=["Free Kiss 💋","Free Hug 🤗"];
+  const chosen=prizes[Math.floor(Math.random()*2)];
+  wheel.style.transform="rotate(3600deg)";
 
-setTimeout(()=>{
-document.getElementById("prizeText").innerText=chosen;
-document.getElementById("resultModal").style.display="flex";
-},5000);
+  setTimeout(()=>{
+    document.getElementById("prizeText").innerText=chosen;
+    document.getElementById("resultModal").style.display="flex";
+  },5000);
 }
 
 function showFinal(){
-document.getElementById("resultModal").style.display="none";
-document.getElementById("wheelPage").style.display="none";
-document.getElementById("finalPage").style.display="block";
+  document.getElementById("resultModal").style.display="none";
+  document.getElementById("wheelPage").style.display="none";
+  document.getElementById("finalPage").style.display="block";
+
+ document.getElementById("finalMessage").innerHTML =
+"Dear " + savedName + ",<br><br>" +
+"My sweet girl, you are deeply cherished and beautifully loved. Never forget how special you are, not just today, but every single day. 💖<br>" +
+
+"Watching your love grow this past year has been something truly special. " +
+"One year of choosing each other, learning each other, being patient with each other, and still holding on. " +
+"That is not ordinary. That is intentional love.<br><br>" +
+
+"Love is not just the sweet moments and cute pictures. " +
+"It is understanding. It is forgiveness. It is staying when things are not perfect. " +
+"And we have shown that kind of love.<br><br>" +
+
+"Looking forward to more days, weeks, months and years to growing deeper, softer, and stronger. " +
+"May we always find comfort in each other. " +
+"May we never lose the friendship inside the love. " +
+"And even on the days when things feel heavy, may we remember why we chose each other in the first place.<br><br>" +
+
+"One year down, forever to go. " + "Happy Val my Softy 💖"
+"God bless us with💖";
+
 }
 
 </script>
