@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Valentine 💖</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+    margin:0;
+    overflow-x:hidden;
+    font-family:'Poppins', sans-serif;
+    background: linear-gradient(135deg,#ff9a9e,#fad0c4,#ffdde1);
+    text-align:center;
+    color:#5a003c;
+}
+
+/* SPLASH */
+#splash{
+    position:fixed;
+    width:100%;
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#ff758c,#ff7eb3);
+    z-index:9999;
+    animation:fadeOut 3s forwards 3s;
+}
+#splash h1{
+    font-family:'Great Vibes', cursive;
+    font-size:4rem;
+    color:white;
+    animation:fadeIn 3s ease-in-out;
+}
+@keyframes fadeIn{
+    from{opacity:0; transform:scale(0.5);}
+    to{opacity:1; transform:scale(1);}
+}
+@keyframes fadeOut{
+    to{opacity:0; visibility:hidden;}
+}
+
+/* Sections */
+.section{
+    display:none;
+    padding:20px;
+    margin-top:15vh;
+}
+
+/* Inputs */
+input{
+    padding:12px;
+    border-radius:30px;
+    border:none;
+    width:80%;
+    max-width:280px;
+    margin-top:10px;
+    font-size:14px;
+}
+
+/* Buttons */
+button{
+    padding:12px 20px;
+    border:none;
+    border-radius:40px;
+    font-weight:600;
+    margin:10px;
+    cursor:pointer;
+    width: min(90%, 280px);
+}
+
+.primary{
+    background:#ff4d6d;
+    color:white;
+}
+
+.secondary{
+    background:#6d6875;
+    color:white;
+}
+
+/* Modal */
+.modal{
+    display:none;
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    background:rgba(0,0,0,0.5);
+    justify-content:center;
+    align-items:center;
+}
+.modal-content{
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    width:90%;
+    max-width:400px;
+}
+
+/* WHEEL */
+#wheel{
+    width:min(90vw,360px);
+    height:min(90vw,360px);
+    border-radius:50%;
+    margin:20px auto;
+    border:8px solid #ff4d6d;
+    position:relative;
+    transition:transform 5s ease-out;
+    background: radial-gradient(circle at center, #fff0f5, #ffd6e0);
+    box-shadow:0 8px 25px rgba(0,0,0,0.08);
+}
+
+/* Labels */
+.label{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform-origin:0 0;
+    font-weight:700;
+    font-size:clamp(12px,3.5vw,16px);
+    color:#5a003c;
+    white-space:nowrap;
+}
+
+/* Proper slice positions */
+.label{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform-origin:center;
+    font-weight:700;
+    font-size:clamp(13px,3.5vw,16px);
+    color:#5a003c;
+    white-space:nowrap;
+}
+
+/* Correct radial positioning */
+.label1{ transform: translate(-50%, -50%) rotate(36deg) translateY(-120px) rotate(-36deg); }
+.label2{ transform: translate(-50%, -50%) rotate(108deg) translateY(-120px) rotate(-108deg); }
+.label3{ transform: translate(-50%, -50%) rotate(180deg) translateY(-120px) rotate(-180deg); }
+.label4{ transform: translate(-50%, -50%) rotate(252deg) translateY(-120px) rotate(-252deg); }
+.label5{ transform: translate(-50%, -50%) rotate(324deg) translateY(-120px) rotate(-324deg); }
+
+#finalMessage{
+    max-width:500px;
+    margin:20px auto;
+    line-height:1.8;
+    font-size:clamp(14px,4vw,16px);
+}
+
+</style>
+</head>
+<body>
+
+<audio id="bgMusic" loop>
+  <source src="./music.mp3" type="audio/mpeg">
+</audio>
+
+<div id="splash">
+<h1>Happy Valentine 💖</h1>
+</div>
+
+<div class="section" id="intro">
+<h2>You are deeply loved.</h2>
+<p>Before we continue… tell me your beautiful name.</p>
+<input type="text" id="girlName" placeholder="Enter your name here">
+<br>
+<button class="primary" onclick="saveName()">Continue 💕</button>
+</div>
+
+<div class="modal" id="valentineModal">
+<div class="modal-content">
+<h2 id="valQuestion">Will You Be My Valentine? 💖</h2>
+<button class="primary" onclick="goToWheel()">Yes 💕</button>
+<button class="secondary" id="noBtn">No 😅</button>
+</div>
+</div>
+
+<div class="section" id="wheelPage">
+<h2>Spin The Love Wheel 🎁</h2>
+<div id="wheel">
+  <div class="label label1">💋 Kiss</div>
+  <div class="label label2">🤗 Hug</div>
+  <div class="label label3">🍫 Chocolate</div>
+  <div class="label label4">🍦 Ice Cream</div>
+  <div class="label label5">🌹 Flowers</div>
+</div>
+<button class="primary" onclick="spinWheel()">Spin 💫</button>
+</div>
+
+<div class="modal" id="resultModal">
+<div class="modal-content">
+<h2>🎁 Congratulations!</h2>
+<h3 id="prizeText"></h3>
+<button class="primary" onclick="showFinal()">Continue 💖</button>
+</div>
+</div>
+
+<div class="section" id="finalPage">
+<h1>🎁 💖</h1>
+<p id="finalMessage"></p>
+</div>
+
+<script>
+
+/* MUSIC ON FIRST CLICK */
+const music=document.getElementById("bgMusic");
+document.addEventListener("click",()=>{
+  music.play().catch(()=>{});
+},{once:true});
+
+/* After splash */
+setTimeout(()=>{
+  document.getElementById("intro").style.display="block";
+},6000);
+
+let savedName="";
+
+/* Save name */
+function saveName(){
+  const input=document.getElementById("girlName").value.trim();
+  if(input==="") return;
+  savedName=input;
+  document.getElementById("intro").style.display="none";
+  document.getElementById("valQuestion").innerText=
+  "Will You Be My Valentine, "+savedName+"? 💖";
+  document.getElementById("valentineModal").style.display="flex";
+}
+
+/* Moving No */
+document.getElementById("noBtn").addEventListener("mouseover",function(){
+  this.style.position="absolute";
+  this.style.left=Math.random()*60+"vw";
+  this.style.top=Math.random()*60+"vh";
+});
+
+/* Go to wheel */
+function goToWheel(){
+  document.getElementById("valentineModal").style.display="none";
+  document.getElementById("wheelPage").style.display="block";
+}
+
+/* Spin rigged */
+function spinWheel(){
+  const wheel=document.getElementById("wheel");
+  const prizes=["Free Kiss 💋","Free Hug 🤗"];
+  const chosen=prizes[Math.floor(Math.random()*2)];
+  wheel.style.transform="rotate(3600deg)";
+
+  setTimeout(()=>{
+    document.getElementById("prizeText").innerText=chosen;
+    document.getElementById("resultModal").style.display="flex";
+  },5000);
+}
+
+function showFinal(){
+  document.getElementById("resultModal").style.display="none";
+  document.getElementById("wheelPage").style.display="none";
+  document.getElementById("finalPage").style.display="block";
+
+ document.getElementById("finalMessage").innerHTML =
+"Dear " + savedName + ",<br><br>" +
+
+"Happy Valentine’s Day 💖<br><br>" +
+
+"My beautiful friend, I hope you never forget how amazing you are. " +
+"You deserve happiness that feels steady, love that feels safe, and friendships that feel genuine.<br><br>" +
+
+"This little message is just a reminder that you are appreciated more than you know. " +
+"Your kindness, your laughter, your strength — they matter. They make a difference.<br><br>" +
+
+"No matter where life takes you, I hope you always choose what makes your heart light and your spirit calm. " +
+"And may you always be surrounded by people who truly see and value you.<br><br>" +
+
+"Keep shining. Keep growing. Keep being you. 💕";
+
+}
+
+</script>
+</body>
+</html>
